@@ -10,31 +10,70 @@ GLuint vao;
 GLuint shaderProgram;
 
 void Initialize() {
-
 	std::vector<glm::vec2> positions;
-
 	std::vector<glm::vec3> colors;
 
 	float r = 1.0;
-	float X = 1.0;
-	float Y = 0.0;
-	float contador = 0.0f;
+	float rr = 0.5;
+	
+	float contador = 18.0f;
+	int c = 1;
 
-	positions.push_back(glm::vec2(0.0f, 0.0f));
-	colors.push_back(glm::vec3(1.0f, 1.0f, 1.0f));
-
-	while (contador <= 360.0f) {
-
+	while (contador <= 379.0f) {
 		float angulo = glm::radians(contador);
 		float x = r*(glm::cos(angulo));
 		float y = r*(glm::sin(angulo));
+		float xx = rr*(glm::cos(angulo));
+		float yy = rr*(glm::sin(angulo));
 
-		positions.push_back(glm::vec2(x, y));
-		colors.push_back(glm::vec3(x, y, 0.0f));
+		if (c % 2 == 1)
+		{ 
+			positions.push_back(glm::vec2(xx, yy));
+			positions.push_back(glm::vec2(x, y));
+			positions.push_back(glm::vec2(xx, yy));
+		}
+		else
+		{
+			positions.push_back(glm::vec2(x, y));
+			positions.push_back(glm::vec2(xx, yy));
+			positions.push_back(glm::vec2(x, y));
+		}
 
+		colors.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
+		colors.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
+		colors.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
 
-		contador = contador + 1.0f;
+		contador = contador + 72.0f;
+		c = c + 1;
 	}
+
+    /*
+	positions.push_back(glm::vec2(0.3f, -0.4f));
+	positions.push_back(glm::vec2(0.6f, -0.8f));
+	positions.push_back(glm::vec2(0.5f, 0.1f));
+	positions.push_back(glm::vec2(0.9f, 0.3f));
+	positions.push_back(glm::vec2(0.0f, 0.5f));
+	positions.push_back(glm::vec2(0.0f, 0.9f));
+	positions.push_back(glm::vec2(-0.5f, 0.1f));
+	positions.push_back(glm::vec2(-0.9f, 0.3f));
+	positions.push_back(glm::vec2(-0.3f, -0.4f));
+	positions.push_back(glm::vec2(-0.6f, -0.8f));
+	positions.push_back(glm::vec2(0.3f, -0.4f));
+	positions.push_back(glm::vec2(0.6f, -0.8f));
+	
+	colors.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
+	colors.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
+	colors.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
+	colors.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
+	colors.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
+	colors.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
+	colors.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
+	colors.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
+	colors.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
+	colors.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
+	colors.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
+	colors.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
+	*/
 
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
@@ -58,14 +97,14 @@ void Initialize() {
 		glBindVertexArray(0);
 
 	InputFile ifile;
-	ifile.Read("DiscardCenter.vert");
+	ifile.Read("default.vert");
 	std::string vertexSource = ifile.GetContents();
 	GLuint vertexShaderHandle = glCreateShader(GL_VERTEX_SHADER);
 	const GLchar * vertexSource_c = (const GLchar*)vertexSource.c_str();
 	glShaderSource(vertexShaderHandle, 1, &vertexSource_c, nullptr);
 	glCompileShader(vertexShaderHandle);
 
-	ifile.Read("DiscardCenter.frag");
+	ifile.Read("default.frag");
 	std::string fragmentSource = ifile.GetContents();
 	GLuint fragmentShaderHandle = glCreateShader(GL_FRAGMENT_SHADER);
 	const GLchar *fragmentSource_c = (const GLchar*)fragmentSource.c_str();
@@ -87,7 +126,7 @@ void GameLoop()
 	glUseProgram(shaderProgram);
 
 	glBindVertexArray(vao);
-	glDrawArrays(GL_TRIANGLE_FAN, 0, 362);
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 18);
 	glBindVertexArray(0);
 
 	glUseProgram(0);
@@ -102,7 +141,7 @@ void ReshapeWindow(int width, int height)
 
 int main(int argc, char* argv[])
 {
-	
+
 	glutInit(&argc, argv);
 	glutInitContextProfile(GLUT_CORE_PROFILE);
 	glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
@@ -129,3 +168,4 @@ int main(int argc, char* argv[])
 
 	return 0;
 }
+
