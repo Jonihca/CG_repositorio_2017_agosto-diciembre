@@ -4,11 +4,11 @@
 
 class InputFile
 {
-public:
+	public:
 	bool Read(std::string filename);
-
+	
 	std::string GetContents();
-
-private:
+		
+	private:
 	std::string _contents;
-};
+}; 
